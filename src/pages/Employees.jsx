@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useFetchData } from '../hooks/useFetchData';
 import { fetchEmployees, addEmployee, deleteEmployee } from '../services/api';
+import { formatIndianPhone } from '../utils/phoneFormatter';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../components/ui/Table';
 import { Loader, ErrorState } from '../components/ui/Loader';
@@ -191,7 +192,7 @@ const Employees = () => {
                   <TableHead>{t('employeeNo')}</TableHead>
                   <TableHead>{t('name')}</TableHead>
                   <TableHead>{t('role')}</TableHead>
-                  <TableHead>{t('department')}</TableHead>
+                  <TableHead>Manager</TableHead>
                   <TableHead>{t('phone')}</TableHead>
                   <TableHead className="text-right">{t('actions')}</TableHead>
                 </TableRow>
@@ -211,7 +212,7 @@ const Employees = () => {
                       </span>
                     </TableCell>
                     <TableCell>{emp.department}</TableCell>
-                    <TableCell className="text-muted-foreground">{emp.phone}</TableCell>
+                    <TableCell className="text-muted-foreground">{formatIndianPhone(emp.phone)}</TableCell>
                     <TableCell className="text-right">
                       <button 
                         onClick={() => handleDeleteEmployee(emp.employee_no)}
@@ -308,7 +309,7 @@ const Employees = () => {
               name="phone" 
               value={formData.phone} 
               onChange={handleInputChange}
-              placeholder="e.g. 555-0106"
+              placeholder="e.g. +91-98765-43206"
               className="w-full flex h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             />
           </div>

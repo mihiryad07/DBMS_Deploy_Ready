@@ -1,4 +1,5 @@
 const db = require('./database');
+const { dbAsync } = require('./database');
 
 const MOCK_DATA = {
   dashboard: {
@@ -12,33 +13,31 @@ const MOCK_DATA = {
     ],
   },
   employees: [
-    { employee_no: 'E1001', name: 'Tony Smith', type: 'Manager', phone: '555-0101', department: 'Logistics' },
-    { employee_no: 'E1002', name: 'Sarah Connor', type: 'Worker', phone: '555-0102', department: 'Sorting' },
-    { employee_no: 'E1003', name: 'Mike Johnson', type: 'Worker', phone: '555-0103', department: 'Forklift' },
-    { employee_no: 'E1004', name: 'Elena Rogers', type: 'Manager', phone: '555-0104', department: 'Inventory' },
-    { employee_no: 'E1005', name: 'James Doe', type: 'Worker', phone: '555-0105', department: 'Logistics' },
-    // Additional Managers
-    { employee_no: 'E1006', name: 'David Chen', type: 'Manager', phone: '555-0106', department: 'Operations' },
-    { employee_no: 'E1007', name: 'Maria Garcia', type: 'Manager', phone: '555-0107', department: 'Quality Control' },
-    { employee_no: 'E1008', name: 'Robert Wilson', type: 'Manager', phone: '555-0108', department: 'Shipping' },
-    { employee_no: 'E1009', name: 'Lisa Thompson', type: 'Manager', phone: '555-0109', department: 'Receiving' },
-    { employee_no: 'E1010', name: 'Kevin Brown', type: 'Manager', phone: '555-0110', department: 'Maintenance' },
-    // Additional Workers
-    { employee_no: 'E1011', name: 'Jennifer Davis', type: 'Worker', phone: '555-0111', department: 'Sorting' },
-    { employee_no: 'E1012', name: 'Christopher Miller', type: 'Worker', phone: '555-0112', department: 'Forklift' },
-    { employee_no: 'E1013', name: 'Amanda Martinez', type: 'Worker', phone: '555-0113', department: 'Logistics' },
-    { employee_no: 'E1014', name: 'Daniel Anderson', type: 'Worker', phone: '555-0114', department: 'Operations' },
-    { employee_no: 'E1015', name: 'Michelle Taylor', type: 'Worker', phone: '555-0115', department: 'Quality Control' },
-    { employee_no: 'E1016', name: 'Jason Thomas', type: 'Worker', phone: '555-0116', department: 'Shipping' },
-    { employee_no: 'E1017', name: 'Stephanie Jackson', type: 'Worker', phone: '555-0117', department: 'Receiving' },
-    { employee_no: 'E1018', name: 'Andrew White', type: 'Worker', phone: '555-0118', department: 'Maintenance' },
-    { employee_no: 'E1019', name: 'Rachel Harris', type: 'Worker', phone: '555-0119', department: 'Inventory' },
-    { employee_no: 'E1020', name: 'Brian Clark', type: 'Worker', phone: '555-0120', department: 'Operations' },
-    { employee_no: 'E1021', name: 'Nicole Lewis', type: 'Worker', phone: '555-0121', department: 'Sorting' },
-    { employee_no: 'E1022', name: 'Timothy Robinson', type: 'Worker', phone: '555-0122', department: 'Forklift' },
-    { employee_no: 'E1023', name: 'Heather Walker', type: 'Worker', phone: '555-0123', department: 'Logistics' },
-    { employee_no: 'E1024', name: 'Justin Hall', type: 'Worker', phone: '555-0124', department: 'Quality Control' },
-    { employee_no: 'E1025', name: 'Melissa Young', type: 'Worker', phone: '555-0125', department: 'Shipping' },
+    { employee_no: 'E1001', name: 'Tony Smith', type: 'Manager', phone: '+91-98765-43201', department: 'Logistics' },
+    { employee_no: 'E1002', name: 'Sarah Connor', type: 'Worker', phone: '+91-98765-43202', department: 'Sorting' },
+    { employee_no: 'E1003', name: 'Mike Johnson', type: 'Worker', phone: '+91-98765-43203', department: 'Forklift' },
+    { employee_no: 'E1004', name: 'Elena Rogers', type: 'Manager', phone: '+91-98765-43204', department: 'Inventory' },
+    { employee_no: 'E1005', name: 'James Doe', type: 'Worker', phone: '+91-98765-43205', department: 'Logistics' },
+    { employee_no: 'E1006', name: 'David Chen', type: 'Manager', phone: '+91-98765-43206', department: 'Operations' },
+    { employee_no: 'E1007', name: 'Maria Garcia', type: 'Manager', phone: '+91-98765-43207', department: 'Quality Control' },
+    { employee_no: 'E1008', name: 'Robert Wilson', type: 'Manager', phone: '+91-98765-43208', department: 'Shipping' },
+    { employee_no: 'E1009', name: 'Lisa Thompson', type: 'Manager', phone: '+91-98765-43209', department: 'Receiving' },
+    { employee_no: 'E1010', name: 'Kevin Brown', type: 'Manager', phone: '+91-98765-43210', department: 'Maintenance' },
+    { employee_no: 'E1011', name: 'Jennifer Davis', type: 'Worker', phone: '+91-98765-43211', department: 'Sorting' },
+    { employee_no: 'E1012', name: 'Christopher Miller', type: 'Worker', phone: '+91-98765-43212', department: 'Forklift' },
+    { employee_no: 'E1013', name: 'Amanda Martinez', type: 'Worker', phone: '+91-98765-43213', department: 'Logistics' },
+    { employee_no: 'E1014', name: 'Daniel Anderson', type: 'Worker', phone: '+91-98765-43214', department: 'Operations' },
+    { employee_no: 'E1015', name: 'Michelle Taylor', type: 'Worker', phone: '+91-98765-43215', department: 'Quality Control' },
+    { employee_no: 'E1016', name: 'Jason Thomas', type: 'Worker', phone: '+91-98765-43216', department: 'Shipping' },
+    { employee_no: 'E1017', name: 'Stephanie Jackson', type: 'Worker', phone: '+91-98765-43217', department: 'Receiving' },
+    { employee_no: 'E1018', name: 'Andrew White', type: 'Worker', phone: '+91-98765-43218', department: 'Maintenance' },
+    { employee_no: 'E1019', name: 'Rachel Harris', type: 'Worker', phone: '+91-98765-43219', department: 'Inventory' },
+    { employee_no: 'E1020', name: 'Brian Clark', type: 'Worker', phone: '+91-98765-43220', department: 'Operations' },
+    { employee_no: 'E1021', name: 'Nicole Lewis', type: 'Worker', phone: '+91-98765-43221', department: 'Sorting' },
+    { employee_no: 'E1022', name: 'Timothy Robinson', type: 'Worker', phone: '+91-98765-43222', department: 'Forklift' },
+    { employee_no: 'E1023', name: 'Heather Walker', type: 'Worker', phone: '+91-98765-43223', department: 'Logistics' },
+    { employee_no: 'E1024', name: 'Justin Hall', type: 'Worker', phone: '+91-98765-43224', department: 'Quality Control' },
+    { employee_no: 'E1025', name: 'Melissa Young', type: 'Worker', phone: '+91-98765-43225', department: 'Shipping' },
   ],
   warehouses: [
     { id: 'WH01', location: 'New York', manager: 'Tony Smith' },
@@ -91,48 +90,129 @@ const MOCK_DATA = {
   ],
 };
 
-db.serialize(() => {
-    // Drop existing tables
-    db.run(`DROP TABLE IF EXISTS employees`);
-    db.run(`DROP TABLE IF EXISTS warehouses`);
-    db.run(`DROP TABLE IF EXISTS bins`);
-    db.run(`DROP TABLE IF EXISTS parts`);
-    db.run(`DROP TABLE IF EXISTS backorders`);
-    db.run(`DROP TABLE IF EXISTS backordersOverTime`);
+async function initializeDatabase() {
+    try {
+        console.log('Starting database initialization...');
 
-    // Create Tables
-    db.run(`CREATE TABLE employees (employee_no TEXT PRIMARY KEY, name TEXT, type TEXT, phone TEXT, department TEXT)`);
-    db.run(`CREATE TABLE warehouses (id TEXT PRIMARY KEY, location TEXT, manager TEXT)`);
-    db.run(`CREATE TABLE bins (bin_id TEXT PRIMARY KEY, warehouse TEXT, capacity INTEGER, remaining INTEGER)`);
-    db.run(`CREATE TABLE parts (part_no TEXT PRIMARY KEY, description TEXT, type TEXT, price REAL, stock INTEGER)`);
-    db.run(`CREATE TABLE backorders (id TEXT PRIMARY KEY, part_no TEXT, manager TEXT, orderDate TEXT, status TEXT, fulfilledDate TEXT)`);
-    db.run(`CREATE TABLE backordersOverTime (name TEXT PRIMARY KEY, count INTEGER)`);
+        // Create tables if they don't exist (non-destructive)
+        await dbAsync.run(`
+            CREATE TABLE IF NOT EXISTS employees (
+                employee_no TEXT PRIMARY KEY,
+                name TEXT NOT NULL,
+                type TEXT NOT NULL,
+                phone TEXT,
+                department TEXT
+            )
+        `);
 
-    // Insert Data
-    const insertEmployee = db.prepare(`INSERT INTO employees VALUES (?, ?, ?, ?, ?)`);
-    MOCK_DATA.employees.forEach(e => insertEmployee.run(e.employee_no, e.name, e.type, e.phone, e.department));
-    insertEmployee.finalize();
+        await dbAsync.run(`
+            CREATE TABLE IF NOT EXISTS warehouses (
+                id TEXT PRIMARY KEY,
+                location TEXT NOT NULL,
+                manager TEXT
+            )
+        `);
 
-    const insertWarehouse = db.prepare(`INSERT INTO warehouses VALUES (?, ?, ?)`);
-    MOCK_DATA.warehouses.forEach(w => insertWarehouse.run(w.id, w.location, w.manager));
-    insertWarehouse.finalize();
+        await dbAsync.run(`
+            CREATE TABLE IF NOT EXISTS bins (
+                bin_id TEXT PRIMARY KEY,
+                warehouse TEXT NOT NULL,
+                capacity INTEGER NOT NULL,
+                remaining INTEGER NOT NULL
+            )
+        `);
 
-    const insertBin = db.prepare(`INSERT INTO bins VALUES (?, ?, ?, ?)`);
-    MOCK_DATA.bins.forEach(b => insertBin.run(b.bin_id, b.warehouse, b.capacity, b.remaining));
-    insertBin.finalize();
+        await dbAsync.run(`
+            CREATE TABLE IF NOT EXISTS parts (
+                part_no TEXT PRIMARY KEY,
+                description TEXT NOT NULL,
+                type TEXT NOT NULL,
+                price REAL NOT NULL,
+                stock INTEGER NOT NULL
+            )
+        `);
 
-    const insertPart = db.prepare(`INSERT INTO parts VALUES (?, ?, ?, ?, ?)`);
-    MOCK_DATA.parts.forEach(p => insertPart.run(p.part_no, p.description, p.type, p.price, p.stock));
-    insertPart.finalize();
+        await dbAsync.run(`
+            CREATE TABLE IF NOT EXISTS backorders (
+                id TEXT PRIMARY KEY,
+                part_no TEXT NOT NULL,
+                manager TEXT,
+                orderDate TEXT,
+                status TEXT NOT NULL,
+                fulfilledDate TEXT
+            )
+        `);
 
-    const insertBackorder = db.prepare(`INSERT INTO backorders VALUES (?, ?, ?, ?, ?, ?)`);
-    MOCK_DATA.backorders.forEach(b => insertBackorder.run(b.id, b.part_no, b.manager, b.orderDate, b.status, b.fulfilledDate));
-    insertBackorder.finalize();
+        await dbAsync.run(`
+            CREATE TABLE IF NOT EXISTS backordersOverTime (
+                name TEXT PRIMARY KEY,
+                count INTEGER NOT NULL
+            )
+        `);
 
-    const insertBot = db.prepare(`INSERT INTO backordersOverTime VALUES (?, ?)`);
-    MOCK_DATA.dashboard.backordersOverTime.forEach(b => insertBot.run(b.name, b.count));
-    insertBot.finalize();
+        console.log('✓ Tables ensured.');
 
-    console.log("Database initialized successfully!");
-    db.close();
-});
+        // Only seed data if tables are empty (preserves existing data)
+        const empCount = await dbAsync.get('SELECT COUNT(*) as count FROM employees');
+        if (empCount.count === 0) {
+            console.log('Tables are empty — seeding with initial data...');
+
+            for (const emp of MOCK_DATA.employees) {
+                await dbAsync.run(
+                    'INSERT INTO employees (employee_no, name, type, phone, department) VALUES (?, ?, ?, ?, ?)',
+                    [emp.employee_no, emp.name, emp.type, emp.phone, emp.department]
+                );
+            }
+            console.log(`  Inserted ${MOCK_DATA.employees.length} employees`);
+
+            for (const wh of MOCK_DATA.warehouses) {
+                await dbAsync.run(
+                    'INSERT INTO warehouses (id, location, manager) VALUES (?, ?, ?)',
+                    [wh.id, wh.location, wh.manager]
+                );
+            }
+            console.log(`  Inserted ${MOCK_DATA.warehouses.length} warehouses`);
+
+            for (const bin of MOCK_DATA.bins) {
+                await dbAsync.run(
+                    'INSERT INTO bins (bin_id, warehouse, capacity, remaining) VALUES (?, ?, ?, ?)',
+                    [bin.bin_id, bin.warehouse, bin.capacity, bin.remaining]
+                );
+            }
+            console.log(`  Inserted ${MOCK_DATA.bins.length} bins`);
+
+            for (const part of MOCK_DATA.parts) {
+                await dbAsync.run(
+                    'INSERT INTO parts (part_no, description, type, price, stock) VALUES (?, ?, ?, ?, ?)',
+                    [part.part_no, part.description, part.type, part.price, part.stock]
+                );
+            }
+            console.log(`  Inserted ${MOCK_DATA.parts.length} parts`);
+
+            for (const bo of MOCK_DATA.backorders) {
+                await dbAsync.run(
+                    'INSERT INTO backorders (id, part_no, manager, orderDate, status, fulfilledDate) VALUES (?, ?, ?, ?, ?, ?)',
+                    [bo.id, bo.part_no, bo.manager, bo.orderDate, bo.status, bo.fulfilledDate]
+                );
+            }
+            console.log(`  Inserted ${MOCK_DATA.backorders.length} backorders`);
+
+            for (const bot of MOCK_DATA.dashboard.backordersOverTime) {
+                await dbAsync.run(
+                    'INSERT INTO backordersOverTime (name, count) VALUES (?, ?)',
+                    [bot.name, bot.count]
+                );
+            }
+            console.log(`  Inserted ${MOCK_DATA.dashboard.backordersOverTime.length} backorder timeline entries`);
+        } else {
+            console.log(`✓ Database already has data (${empCount.count} employees found) — skipping seed.`);
+        }
+
+        console.log('✓ Database initialized successfully!');
+    } catch (err) {
+        console.error('✗ Database initialization error:', err.message);
+        throw err;
+    }
+}
+
+module.exports = initializeDatabase;

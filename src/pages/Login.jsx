@@ -25,18 +25,22 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Dynamic Background Elements */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-accent/15 rounded-full blur-3xl animate-pulse -z-10" />
-      <div className="absolute bottom-1/4 right-1/4 w-[30rem] h-[30rem] bg-secondary/12 rounded-full blur-3xl animate-pulse delay-1000 -z-10" />
+    <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-4 relative overflow-hidden perspective-container">
+      {/* Dynamic Background Elements with 3D float */}
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-accent/15 rounded-full blur-3xl float-animation -z-10" />
+      <div className="absolute bottom-1/4 right-1/4 w-[30rem] h-[30rem] bg-secondary/12 rounded-full blur-3xl float-animation-delay -z-10" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[40rem] h-[40rem] bg-primary/5 rounded-full blur-3xl float-animation-slow -z-10" />
       
-      {/* Login Card - Glassmorphism */}
-      <div className="w-full max-w-md relative animate-in fade-in zoom-in duration-700">
-        <div className="absolute inset-0 bg-gradient-to-br from-card/80 to-card/40 backdrop-blur-xl rounded-3xl border border-white/10 shadow-2xl z-0" />
+      {/* Login Card - 3D Glassmorphism */}
+      <div className="w-full max-w-md relative rise-in">
+        <div className="absolute inset-0 bg-gradient-to-br from-card/80 to-card/40 backdrop-blur-xl rounded-3xl border border-white/10 shadow-2xl z-0 depth-3" />
+        
+        {/* Animated gradient border */}
+        <div className="absolute inset-0 rounded-3xl gradient-border" />
         
         <div className="relative z-10 p-8 sm:p-10">
           <div className="flex justify-center mb-8">
-            <div className="w-16 h-16 bg-gradient-to-br from-accent to-secondary rounded-2xl flex items-center justify-center shadow-lg shadow-accent/20">
+            <div className="w-16 h-16 bg-gradient-to-br from-accent to-secondary rounded-2xl flex items-center justify-center shadow-lg shadow-accent/20 float-animation-slow glow-accent">
               <LayoutDashboard size={32} className="text-white" />
             </div>
           </div>
@@ -49,7 +53,7 @@ const Login = () => {
           </div>
 
           {error && (
-            <div className="mb-6 p-4 rounded-xl bg-destructive/10 border border-destructive/20 flex items-center gap-3 text-destructive animate-in slide-in-from-top-2">
+            <div className="mb-6 p-4 rounded-xl bg-destructive/10 border border-destructive/20 flex items-center gap-3 text-destructive rise-in">
               <AlertCircle size={20} className="shrink-0" />
               <p className="text-sm font-medium">{error}</p>
             </div>
@@ -69,7 +73,7 @@ const Login = () => {
                   required
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 bg-muted/30 border border-border rounded-lg focus:ring-2 focus:ring-accent focus:border-transparent outline-none transition-all placeholder:text-muted-foreground/50 shadow-inner"
+                  className="w-full pl-10 pr-4 py-3 bg-muted/30 border border-border rounded-xl focus:ring-2 focus:ring-accent focus:border-transparent outline-none transition-all placeholder:text-muted-foreground/50 shadow-inner hover:bg-muted/40"
                   placeholder="admin"
                 />
               </div>
@@ -88,7 +92,7 @@ const Login = () => {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 bg-muted/30 border border-border rounded-lg focus:ring-2 focus:ring-accent focus:border-transparent outline-none transition-all placeholder:text-muted-foreground/50 shadow-inner"
+                  className="w-full pl-10 pr-4 py-3 bg-muted/30 border border-border rounded-xl focus:ring-2 focus:ring-accent focus:border-transparent outline-none transition-all placeholder:text-muted-foreground/50 shadow-inner hover:bg-muted/40"
                   placeholder="••••••••"
                 />
               </div>
@@ -97,7 +101,7 @@ const Login = () => {
             <button
               type="submit"
               disabled={loading}
-              className="relative w-full overflow-hidden rounded-lg bg-accent text-accent-foreground font-semibold py-3.5 transition-all hover:shadow-md active:scale-[0.98] mt-4 disabled:opacity-70 disabled:active:scale-100"
+              className="relative w-full overflow-hidden rounded-xl bg-gradient-to-r from-accent to-accent/90 text-accent-foreground font-semibold py-3.5 btn-3d mt-4 disabled:opacity-70 disabled:active:scale-100 glow-accent"
             >
               {loading ? (
                 <span className="flex items-center justify-center gap-2">
@@ -107,6 +111,8 @@ const Login = () => {
               ) : (
                 <span className="flex items-center justify-center">{t('signIn')}</span>
               )}
+              {/* Button shine effect */}
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12 shimmer-effect" />
             </button>
           </form>
           

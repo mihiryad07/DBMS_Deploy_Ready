@@ -25,7 +25,7 @@ const Sidebar = ({ onClose }) => {
   return (
     <div className="flex flex-col h-full py-6 bg-gradient-to-b from-background via-background to-background">
       <div className="px-6 mb-10 flex items-center gap-3">
-        <div className="bg-gradient-to-br from-accent to-accent/80 text-accent-foreground p-2.5 rounded-lg shadow-md">
+        <div className="bg-gradient-to-br from-accent to-accent/80 text-accent-foreground p-2.5 rounded-xl shadow-lg float-animation-slow glow-accent">
           <Sprout strokeWidth={2.4} size={24} />
         </div>
         <h1 className="text-xl font-bold tracking-tight text-foreground">Wachsen</h1>
@@ -41,9 +41,9 @@ const Sidebar = ({ onClose }) => {
               onClick={onClose}
               className={({ isActive }) => 
                 cn(
-                  "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 group relative overflow-hidden",
+                  "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium nav-item-3d group relative overflow-hidden",
                   isActive 
-                    ? "text-accent-foreground bg-accent shadow-sm" 
+                    ? "text-accent-foreground bg-gradient-to-r from-accent to-accent/90 shadow-md glow-accent" 
                     : "text-muted-foreground hover:text-foreground hover:bg-muted/40",
                   "active:scale-95"
                 )
@@ -52,13 +52,15 @@ const Sidebar = ({ onClose }) => {
             >
               <item.icon size={18} className="relative z-10" />
               <span className="relative z-10">{item.name}</span>
+              {/* Hover shine effect */}
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 -skew-x-12" />
             </NavLink>
           ))}
         </div>
       </div>
       
       <div className="px-4 mt-auto">
-        <div className="p-4 bg-gradient-to-br from-primary/8 to-secondary/8 rounded-lg border border-border/50 shadow-sm">
+        <div className="p-4 bg-gradient-to-br from-primary/8 to-secondary/8 rounded-xl border border-border/50 shadow-sm depth-1">
           <div className="text-xs font-semibold text-foreground mb-1">{t('wachsenSystem')}</div>
           <p className="text-xs text-muted-foreground leading-relaxed">{t('warehouseManagement')}</p>
         </div>

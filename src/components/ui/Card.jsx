@@ -6,10 +6,19 @@ export function cn(...inputs) {
   return twMerge(clsx(inputs));
 }
 
-export function Card({ className, children, ...props }) {
+export function Card({ className, children, hover3d = true, ...props }) {
   return (
-    <div className={cn("bg-card text-card-foreground rounded-lg border border-border shadow-md hover:shadow-lg transition-shadow duration-300", className)} {...props}>
-      {children}
+    <div className={cn(
+      "bg-card text-card-foreground rounded-xl border border-border/60 shadow-md",
+      hover3d && "card-3d",
+      "relative overflow-hidden",
+      className
+    )} {...props}>
+      {/* Subtle shimmer overlay */}
+      <div className="absolute inset-0 shimmer-effect pointer-events-none opacity-30 rounded-xl" />
+      <div className="relative z-[1]">
+        {children}
+      </div>
     </div>
   );
 }

@@ -67,12 +67,13 @@ function fetchAPI(url) {
   });
 }
 
-// Generate realistic phone numbers
+// Generate realistic Indian phone numbers (10 digits)
 function generatePhone() {
-  const area = String(Math.floor(Math.random() * 900) + 100);
-  const prefix = String(Math.floor(Math.random() * 900) + 100);
-  const line = String(Math.floor(Math.random() * 9000) + 1000);
-  return `${area}-${prefix}-${line}`;
+  // Indian mobile numbers start with 6-9 and are 10 digits long
+  const firstDigit = String(Math.floor(Math.random() * 4) + 6); // 6-9
+  const remainingDigits = String(Math.floor(Math.random() * 1000000000)).padStart(9, '0');
+  const phoneNumber = firstDigit + remainingDigits;
+  return `+91-${phoneNumber.slice(0, 5)}-${phoneNumber.slice(5)}`;
 }
 
 // Generate realistic employee number

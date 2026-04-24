@@ -1,24 +1,15 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db/database');
+const { dbAsync } = require('../db/database');
 
-const queryDb = (query, params = []) => {
-    return new Promise((resolve, reject) => {
-        db.all(query, params, (err, rows) => {
-            if (err) reject(err);
-            else resolve(rows);
-        });
-    });
+const queryDb = async (query, params = []) => {
+    return await dbAsync.all(query, params);
 };
 
-const getDb = (query, params = []) => {
-    return new Promise((resolve, reject) => {
-        db.get(query, params, (err, row) => {
-            if (err) reject(err);
-            else resolve(row);
-        });
-    });
-}
+const getDb = async (query, params = []) => {
+    return await dbAsync.get(query, params);
+};
 
 router.post('/login', (req, res) => {
     const { username, password } = req.body;
@@ -78,33 +69,30 @@ router.get('/employees', async (req, res) => {
     }
 });
 
-router.post('/employees', (req, res) => {
+router.post('/employees', async (req, res) => {
     const { employee_no, name, type, phone, department } = req.body;
     
     if (!employee_no || !name || !type || !phone || !department) {
         return res.status(400).json({ error: 'All fields are required.' });
     }
     
-    const query = `INSERT INTO employees (employee_no, name, type, phone, department) VALUES (?, ?, ?, ?, ?)`;
-    db.run(query, [employee_no, name, type, phone, department], function(err) {
-        if (err) {
-            return res.status(500).json({ error: err.message });
-        }
+    try {
+        const query = `INSERT INTO employees (employee_no, name, type, phone, department) VALUES (?, ?, ?, ?, ?)`;
+        await queryDb(query, [employee_no, name, type, phone, department]);
         res.status(201).json({ message: 'Employee added successfully', employee_no });
-    });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 });
 
-router.delete('/employees/:id', (req, res) => {
+router.delete('/employees/:id', async (req, res) => {
     const { id } = req.params;
-    db.run('DELETE FROM employees WHERE employee_no = ?', [id], function(err) {
-        if (err) {
-            return res.status(500).json({ error: err.message });
-        }
-        if (this.changes === 0) {
-            return res.status(404).json({ error: 'Employee not found' });
-        }
+    try {
+        const result = await queryDb('DELETE FROM employees WHERE employee_no = ?', [id]);
         res.json({ message: 'Employee deleted successfully' });
-    });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 });
 
 router.get('/warehouses', async (req, res) => {
@@ -116,33 +104,30 @@ router.get('/warehouses', async (req, res) => {
     }
 });
 
-router.post('/warehouses', (req, res) => {
+router.post('/warehouses', async (req, res) => {
     const { id, location, manager } = req.body;
 
     if (!id || !location || !manager) {
         return res.status(400).json({ error: 'All fields are required: id, location, manager.' });
     }
 
-    const query = `INSERT INTO warehouses (id, location, manager) VALUES (?, ?, ?)`;
-    db.run(query, [id, location, manager], function(err) {
-        if (err) {
-            return res.status(500).json({ error: err.message });
-        }
+    try {
+        const query = `INSERT INTO warehouses (id, location, manager) VALUES (?, ?, ?)`;
+        await queryDb(query, [id, location, manager]);
         res.status(201).json({ message: 'Warehouse added successfully', id });
-    });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 });
 
-router.delete('/warehouses/:id', (req, res) => {
+router.delete('/warehouses/:id', async (req, res) => {
     const { id } = req.params;
-    db.run('DELETE FROM warehouses WHERE id = ?', [id], function(err) {
-        if (err) {
-            return res.status(500).json({ error: err.message });
-        }
-        if (this.changes === 0) {
-            return res.status(404).json({ error: 'Warehouse not found' });
-        }
+    try {
+        const result = await queryDb('DELETE FROM warehouses WHERE id = ?', [id]);
         res.json({ message: 'Warehouse deleted successfully' });
-    });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 });
 
 router.get('/bins', async (req, res) => {
@@ -163,25 +148,28 @@ router.get('/parts', async (req, res) => {
     }
 });
 
-router.post('/parts', (req, res) => {
+router.post('/parts', async (req, res) => {
     const { part_no, description, type, price, stock } = req.body;
     if (!part_no || !description || !type || price === undefined || stock === undefined) {
         return res.status(400).json({ error: 'All part fields are required.' });
     }
-    const query = `INSERT INTO parts (part_no, description, type, price, stock) VALUES (?, ?, ?, ?, ?)`;
-    db.run(query, [part_no, description, type, price, stock], function(err) {
-        if (err) return res.status(500).json({ error: err.message });
+    try {
+        const query = `INSERT INTO parts (part_no, description, type, price, stock) VALUES (?, ?, ?, ?, ?)`;
+        await queryDb(query, [part_no, description, type, price, stock]);
         res.status(201).json({ message: 'Part added successfully', part_no });
-    });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 });
 
-router.delete('/parts/:id', (req, res) => {
+router.delete('/parts/:id', async (req, res) => {
     const { id } = req.params;
-    db.run('DELETE FROM parts WHERE part_no = ?', [id], function(err) {
-        if (err) return res.status(500).json({ error: err.message });
-        if (this.changes === 0) return res.status(404).json({ error: 'Part not found' });
+    try {
+        const result = await queryDb('DELETE FROM parts WHERE part_no = ?', [id]);
         res.json({ message: 'Part deleted successfully' });
-    });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 });
 
 router.get('/backorders', async (req, res) => {
@@ -193,26 +181,29 @@ router.get('/backorders', async (req, res) => {
     }
 });
 
-router.post('/backorders', (req, res) => {
+router.post('/backorders', async (req, res) => {
     const { id, part_no, manager, orderDate, status, fulfilledDate } = req.body;
     if (!id || !part_no || !manager || !orderDate || !status) {
         return res.status(400).json({ error: 'Required fields missing for backorder.' });
     }
-    const query = `INSERT INTO backorders (id, part_no, manager, orderDate, status, fulfilledDate) VALUES (?, ?, ?, ?, ?, ?)`;
-    // fulfilledDate can be null if not completed
-    db.run(query, [id, part_no, manager, orderDate, status, fulfilledDate || null], function(err) {
-        if (err) return res.status(500).json({ error: err.message });
+    try {
+        const query = `INSERT INTO backorders (id, part_no, manager, orderDate, status, fulfilledDate) VALUES (?, ?, ?, ?, ?, ?)`;
+        // fulfilledDate can be null if not completed
+        await queryDb(query, [id, part_no, manager, orderDate, status, fulfilledDate || null]);
         res.status(201).json({ message: 'Backorder added successfully', id });
-    });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 });
 
-router.delete('/backorders/:id', (req, res) => {
+router.delete('/backorders/:id', async (req, res) => {
     const { id } = req.params;
-    db.run('DELETE FROM backorders WHERE id = ?', [id], function(err) {
-        if (err) return res.status(500).json({ error: err.message });
-        if (this.changes === 0) return res.status(404).json({ error: 'Backorder not found' });
+    try {
+        const result = await queryDb('DELETE FROM backorders WHERE id = ?', [id]);
         res.json({ message: 'Backorder deleted successfully' });
-    });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 });
 
 router.post('/query', async (req, res) => {
@@ -319,6 +310,42 @@ router.post('/query', async (req, res) => {
         }
     } catch (err) {
         res.status(500).json({ error: err.message });
+    }
+});
+
+router.post('/custom-query', async (req, res) => {
+    const { sql } = req.body;
+
+    if (!sql || !sql.trim()) {
+        return res.status(400).json({ error: 'SQL query is required.' });
+    }
+
+    // Only allow SELECT statements for safety
+    const trimmed = sql.trim().toUpperCase();
+    const forbidden = ['INSERT', 'UPDATE', 'DELETE', 'DROP', 'ALTER', 'CREATE', 'REPLACE', 'TRUNCATE', 'ATTACH', 'DETACH'];
+    for (const keyword of forbidden) {
+        if (trimmed.startsWith(keyword)) {
+            return res.status(403).json({ error: `Only SELECT queries are allowed. "${keyword}" statements are blocked.` });
+        }
+    }
+
+    if (!trimmed.startsWith('SELECT') && !trimmed.startsWith('WITH') && !trimmed.startsWith('PRAGMA') && !trimmed.startsWith('EXPLAIN')) {
+        return res.status(403).json({ error: 'Only SELECT / WITH / PRAGMA / EXPLAIN queries are allowed.' });
+    }
+
+    try {
+        const rows = await queryDb(sql);
+        const columns = rows.length > 0 ? Object.keys(rows[0]) : [];
+        const data = rows.map(row => Object.values(row));
+
+        res.json({
+            columns,
+            rows: data,
+            rowCount: data.length,
+            executedSql: sql.trim()
+        });
+    } catch (err) {
+        res.status(400).json({ error: `SQL Error: ${err.message}` });
     }
 });
 

@@ -186,7 +186,7 @@ const Parts = () => {
                       </span>
                     </TableCell>
                     <TableCell className="text-right font-mono text-muted-foreground">
-                      ${part.price.toFixed(2)}
+                      ${Number(part.price || 0).toFixed(2)}
                     </TableCell>
                     <TableCell className="text-right">
                       {part.stock}

@@ -144,3 +144,16 @@ export const executeQuery = async (queryId) => {
   if (!response.ok) throw new Error('Failed to execute query');
   return response.json();
 };
+
+export const executeCustomQuery = async (sql) => {
+  const response = await fetch(`${API_BASE_URL}/custom-query`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ sql }),
+  });
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.error || 'Failed to execute custom query');
+  return data;
+};
